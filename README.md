@@ -1,6 +1,7 @@
-<a href="https://www.mediamonkey.com">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/junkerderprovinz/flat-monkey-dark/main/.github/assets/flat-monkey-dark-banner-dark.png">
   <img src="https://raw.githubusercontent.com/junkerderprovinz/flat-monkey-dark/main/.github/assets/flat-monkey-dark-banner.png" alt="Flat Monkey Dark" width="100%">
-</a>
+</picture>
 
 <p align="center">
   <a href="https://github.com/junkerderprovinz/flat-monkey-dark/releases/latest"><img src="https://img.shields.io/github/v/release/junkerderprovinz/flat-monkey-dark?style=for-the-badge&logo=github&logoColor=white&label=Release&color=1d99f3" alt="Release" height="36"></a>&nbsp;

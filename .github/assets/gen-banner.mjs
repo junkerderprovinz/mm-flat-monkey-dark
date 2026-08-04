@@ -29,8 +29,15 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 // ---- content + styling -----------------------------------------------------
 const NAME = "Flat Monkey Dark";
 const CLAIM = "Play it. Tag it. In the dark."; // cheeky, no "w" (Lato "w" opentype.js trap)
-const NAME_FILL = "#161616"; // Carbon dark - the skin's signature
-const CLAIM_FILL = "#5a5d5e"; // house claim grey
+// Banner standard: theme-flip pair, name = foreground colour, claim = grey,
+// left-anchored, claim pulled close to the name (logo stays the accent colour).
+const LEFT_MARGIN = 165;
+const THEMES = [
+  // logo = a dark accent on the white banner (readable), the #FFE000 sunflower
+  // accent on the dark banner (matches the skin's dark-mode look).
+  { suf: "",      bg: "#ffffff", name: "#1f2328", claim: "#5a5d5e", logo: "#0f62fe" },
+  { suf: "-dark", bg: "#0d1117", name: "#e6edf3", claim: "#9aa4ad", logo: "#FFE000" },
+];
 const W = 1600, H = 500;
 const LOGO_VB_W = 245.76, LOGO_VB_H = 225.43; // mediamonkey.svg viewBox
 let nameSize = 120, claimSize = 40, gap = 56, LH = 300;
@@ -105,7 +112,7 @@ if (L.groupW > maxGroupW) {
   L = layout();
 }
 
-const startX = (W - L.groupW) / 2;
+const startX = LEFT_MARGIN;
 const LX = startX, LY = (H - LH) / 2;
 const textX = startX + L.LW + gap;
 
@@ -113,7 +120,7 @@ const em = (f, s) => s / f.unitsPerEm;
 const nameAsc = nameFont.ascender * em(nameFont, nameSize);
 const nameDesc = -nameFont.descender * em(nameFont, nameSize);
 const claimAsc = claimFont.ascender * em(claimFont, claimSize);
-const lineGap = nameSize * 0.18;
+const lineGap = 10; // claim pulled close to the name (banner standard)
 const blockH = nameAsc + nameDesc + lineGap + claimAsc;
 const nameBaseline = H / 2 - blockH / 2 + nameAsc;
 const claimBaseline = nameBaseline + nameDesc + lineGap + claimAsc;
@@ -131,15 +138,17 @@ logo = logo.replace(
   `<svg x="${LX.toFixed(1)}" y="${LY.toFixed(1)}" width="${L.LW.toFixed(1)}" height="${LH.toFixed(1)}" viewBox="0 0 ${LOGO_VB_W} ${LOGO_VB_H}" xmlns="http://www.w3.org/2000/svg">`,
 );
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Flat Monkey Dark">
-  <rect width="${W}" height="${H}" fill="#ffffff"/>
-  ${logo}
-  <path d="${namePath}" fill="${NAME_FILL}"/>
-  <path d="${claimPath}" fill="${CLAIM_FILL}"/>
+for (const t of THEMES) {
+  const tlogo = logo.replaceAll("#FFE000", t.logo); // recolour the monkey per theme
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Flat Monkey Dark">
+  <rect width="${W}" height="${H}" fill="${t.bg}"/>
+  ${tlogo}
+  <path d="${namePath}" fill="${t.name}"/>
+  <path d="${claimPath}" fill="${t.claim}"/>
 </svg>
 `;
-writeFileSync(join(__dir, "flat-monkey-dark-banner.svg"), svg);
-
-const png = new Resvg(svg, { fitTo: { mode: "width", value: W }, background: "white" }).render().asPng();
-writeFileSync(join(__dir, "flat-monkey-dark-banner.png"), png);
-console.log(`wrote banner (name ${Math.round(L.nameW)}px, claim ${Math.round(L.claimW)}px, group ${Math.round(L.groupW)}px, nameSize ${nameSize.toFixed(1)})`);
+  writeFileSync(join(__dir, `flat-monkey-dark-banner${t.suf}.svg`), svg);
+  const png = new Resvg(svg, { fitTo: { mode: "width", value: W }, background: t.bg }).render().asPng();
+  writeFileSync(join(__dir, `flat-monkey-dark-banner${t.suf}.png`), png);
+}
+console.log(`wrote banner + dark (nameSize ${nameSize.toFixed(1)}, gap ${gap.toFixed(0)}, logo #FFE000)`);
