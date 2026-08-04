@@ -40,7 +40,7 @@ const THEMES = [
 ];
 const W = 1600, H = 500;
 const LOGO_VB_W = 245.76, LOGO_VB_H = 225.43; // mediamonkey.svg viewBox
-let nameSize = 120, claimSize = 40, gap = 56, LH = 300;
+let nameSize = 120, claimSize = 40, gap = 56, LH = 367;
 const maxGroupW = W - 160; // 80px margin each side
 // ---------------------------------------------------------------------------
 
